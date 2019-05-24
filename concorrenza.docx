@@ -1,0 +1,40 @@
+I Lock
+Attraverso un lock è possibile vincolare l'utilizzo di un'intera tabella o di una singola riga ad uno specifico utente per il tempo necessario allo svolgimento di una determinata operazione. In questo modo si esclude la possibilità che due o più utenti possano svolgere operazioni concorrenti e simultanee ingenerando conflitti ed incongruenza sui dati.
+
+Si parla, quindi, di table lock quando il vincolo riguarda un'intera tabella e di row lock quando riguarda una singola riga. E' bene precisare che MyISAM supporta unicamente i lock a livello di tabella, quindi se volete utilizzare i lock a livello row dovete utilizzare lo storage engine InnoDB.
+
+Ancora, i lock possono essere di due tipi:
+    • in lettura: l'utente che ottiene un lock in lettura ha la garanzia che nessuno (nemmeno lui) potrà compiere operazioni di aggiornamento sulla tabella sino a quando il lock non verrà rilasciato: nessuno può modificare i dati, ma tutti hanno facoltà di accedervi in lettura;
+    • in scrittura: l'utente che ottiene un lock in scrittura ha la possibilità di leggere e modificare i dati in esclusiva; sino a quando il lock non verrà rilasciato, infatti, nessun altro potrà accedere a quei dati ne in lettura ne in scrittura.
+
+Impostare un table lock in MySQL
+Per impostare un lock a livello di tabella si fa ricorso al comando LOCK TABLES seguito dal nome della tabella e dal tipo di vincolo che si vuole creare (READ o WRITE).
+
+Ad esempio:
+LOCK TABLES acquisti READ;
+Se per finalità applicative è necessario applicare un lock a più tabelle, è necessario farlo all'interno del medesimo comando (separando i nomi delle diverse tabelle con una virgola). E' importante ricordare, infatti, che ogni volta che utilizziamo LOCK TABLES i lock precedenti vengono rilasciati. Vediamo un esempio di lock su più tabelle:
+LOCK TABLES acquisti READ, guadagni WRITE;
+Nel momento in cui viene attivato un lock è possibile lavorare solo sulle tabelle cui esso è associato e non su altre tabelle! Nel nostro esempio, quindi, le query potranno riguardare solo le tabelle "acquisti" e "guadagni".
+
+Rilasciare i lock
+Una volta completate le operazioni sulle tabelle coinvolte è possibile rilasciare esplicitamente il lock mediante il comando:
+UNLOCK TABLES;
+E' bene ricordare che, anche in mancanza di un unlock, i lock vengono rilasciati automaticamente nei seguenti casi:
+    • quando viene impostato un nuovo lock;
+    • alla chiusura della connessione col database.
+
+
+
+Impostare lock a livello di riga
+Come detto, InnoDB consente - all'interno di una transazione - di impostare dei lock a livello di riga (e non solo, come nel caso di MyISAM, a livello di tabella). Per farlo, all'inizio della transaction, si deve acquisire il lock mediante una SELECT sui record interessati seguita dalle seguenti clausole:
+    • SELECT ... FOR UPDATE
+Questo comando imposta un lock su tutti i record selezionati segnalando al DBMS l'evidente intenzione di procedere ad un loro aggiornamento; gli altri utenti non potranno leggere le righe coinvolte.
+    • SELECT ... LOCK IN SHARE MODE
+In questo caso viene impostato un lock sulle righe coinvolte nella selezione che consente anche ad altri utenti di leggerne il contenuto ma gli impedisce di modificarlo fino a quando non si verificherà il commit, garantendo all'utente che beneficia del lock che i valori non verranno alterati nel corso della transazione.
+
+Vediamo un paio di esempi:
+SELECT * FROM utenti WHERE id = 123 LOCK IN SHARE MODE;
+In questo caso anche altre transazioni potranno accedere in lettura alla riga identificata dall'id 123, ma nessuna di queste potrà modificarne i valori, almeno sino a quando la transazione che detiene il lock non sia terminata.
+SELECT * FROM utenti WHERE id = 123 FOR UPDATE;
+In questo caso, invece, le altre transazioni non potranno nemmeno leggere i dati del record con id 123 in quanto "saranno presto aggiornati": sino a quando la transazione che detiene il lock non termina (con un commit o un rollback) i dati di quel record non saranno accessibili nemmeno in sola lettura.
+
