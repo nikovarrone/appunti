@@ -1,0 +1,79 @@
+data: 19/02/2019
+path: Bhojak/_Informatica/Teoria/TeoriaNormalizzazione/
+pdf: normalizzazione.pdf
+argomento: normalizzazione
+
+ipotizzando che ogni cliente possa avere più conti ed ogni conto sia intestato ad un solo cliente.
+Scrivere, quindi, l’istruzione SQL che permette di visualizzare per ogni conto e per ogni mese il saldo delle operazioni compiute nel mese (il saldo si calcola sommando i movimenti Avere e sottraendo i movimenti Dare).
+
+1 F.N.:
+	Nome Cliente è un attributo non atomico, poiché può essere diviso in nome e cognome, cosa che potrebbe tornare utile nel caso in cui si volesse ottenere un ordinamento per cognome o per nome, ma si potrebbe parlare di persone giuridiche, e in questo caso non avrebbe senso. Per il resto la tabella può essere considerata in prima forma normale, poiché tenendo la data come tale si possono utilizzare le funzioni di manipolazione delle date, e inoltre caso mai si volessero ottenere le componenti singole della data basterebbe utilizzare le funzioni di manipolazione delle stringhe, ottenendo in questo modo data, mese ed anno. Un’altra informazione potenzialmente non atomica potrebbero essere il telefono, che si potrebbe dividere in prefisso e numero, ma non è rilevante in questo contesto.
+
+Chiavi Candidate:
+	1) CODCLI + CCONTO + NUMOPE + DATOPE
+	2) CFISCA + CCONTO + NUMOPE + DATOPE
+
+2 F.N.:
+	CODCLI → TELCLI, CFISCA, NOMCLI
+	CLIENTE (CODCLI, CFISCA, TELCLI, NOMCLI)
+
+	CCONTO → DESCON
+	CONTO (CCONTO, DESCON)
+
+	NUMOPE → IMPORT, DARAVE, DATOPE
+	OPERAZIONI (NUMOPE, IMPORT, DARAVE, DATOPE)
+
+3 F.N.:
+	CLIENTE:
+		CLIENTE (CODCLI, CFISCA)
+		DATICLIENTE (CFISCA, NOMCLI, TELCLI)
+
+	CONTO:
+		Ha un solo attributo primo
+
+	OPERAZIONI:
+		Gli attributi non hanno dipendenze
+
+BCFN:
+		CLIENTE (CODCLI, CFISCA)
+		DATICLIENTE (CFISCA, NOMCLI, TELCLI)
+		OPERAZIONI (NUMOPE, IMPORT, DARAVE, DATOPE)
+		CONTO (CCONTO, DESCON)
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1 F.N.:
+	Nome Cliente è un attributo non atomico, poiché può essere diviso in nome e cognome, cosa che potrebbe tornare utile nel caso in cui si volesse ottenere un ordinamento per cognome o per nome, ma si potrebbe parlare di persone giuridiche, e in questo caso non avrebbe senso. Per il resto la tabella può essere considerata in prima forma normale, poiché tenendo la data come tale si possono utilizzare le funzioni di manipolazione delle date, e inoltre caso mai si volessero ottenere le componenti singole della data basterebbe utilizzare le funzioni di manipolazione delle stringhe, ottenendo in questo modo data, mese ed anno. Un’altra informazione potenzialmente non atomica potrebbero essere il telefono, che si potrebbe dividere in prefisso e numero, ma non è rilevante in questo contesto.
+
+Chiavi Candidate:
+	1) CCONTO + NUMOPE + DATOPE
+	2) CCONTO + NUMOPE + DATOPE
+
+2 F.N.:
+
+	CCONTO → DESCON, CODCLI, NOMCLI, CIFSCA, TELCLI
+	CONTO (CCONTO, DESCON, CODCLI, NOMCLI, CFISCA, TELCLI)
+
+	BANCA (CCONTO, NUMOPE, DATAOPE, IMPORT, DARAVE)
+
+3 F.N.:
+
+	CONTO:
+		CCONTO →CODCLI→NOMCLI, TELCLI
+		CONTO (CCONTO, DESCON, CODCLI, CFISCA)
+		CLIENTE (CODCLI, NOMCLI, TELCLI)
+
+	BANCA:
+		
+
+BCFN:
+		CODCLI→CFISCA
+		CLIENTE (CODCLI, NOMCLI, TELCLI, CFISCA)
+		CONTO (CCONTO, DESCON, CODCLI)
+		BANCA (CCONTO, NUMOPE, DATAOPE, IMPORT, DARAVE)
+
+QUERY:	
+
+	SELECT	cconto, YEAR(DataOpe), MONTH(DataOpe), SUM(if(darave='A', Import, Import*-1)) AS Saldo
+	FROM 	Banca
+	GROUPBY	cconto, YEAR(DataOpe), MONTH(DataOpe)

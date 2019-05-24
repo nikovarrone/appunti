@@ -1,0 +1,73 @@
+Il modello e/r è indipendente dal modello DBMS, escluso il fatto che è facile da comprendere. Da quest'ultimo deriva il modello logico, il quale mantiene la sua
+indipendenza dal DBMS. A sua volta, dal modello logico deriva la create table, la quale invece dipende dal DBMS, poichè ci sono forme dialettali differenti che
+variano la lunghezza dei campi o delle istruzioni. Il modello logico NON è la tabella con la definizione dei campi, ma soltanto una tabella che presenta a fianco
+tutti i suoi campi:
+	TABELLA(pk, campo1, campo2,...)
+Un'entità è dotata di attributi e/o proprietà, proprio come una classe. Un'occorrenza dell'entità può essere vista come un oggetto dell'entità. Un'entità definisce
+come è composto un singolo record, quindi in seguito si dovrà valorizzare il record.
+Un identificatore composto solo di attributi dell'entità viene detto interno. A primo impatto un modello e/r è molto più leggibile se per ogni entità vengono inseriti
+anche i campi di quest'ultima. Bisogna sempre mettere gli attributi, facendo prima una brutta, e quando si trova una forma comprensibile la si ricopia in bella. E'
+preferibile farlo poichè dal modello e/r si riesce già a vedere come sono composte le entità e se i dati richiesti dal problema sono stati inseriti correttamente,
+senza la necessità di dover andare a vedere il modello logico.
+
+CARDINALITA'
+
+La cardinalità può essere A UNO o A MOLTI:
+
+				1							1
+	Entità x __________ associazione __________ Enitità y
+
+				1							N
+	Entità x __________ associazione __________ Enitità y
+
+				M							N
+	Entità x __________ associazione __________ Enitità y
+
+	Regole di derivazione:
+
+	1 A 1
+		La chiave primaria dell'entità x è la medesima chiave primaria dell'entità y
+
+	1 A N
+		La chiave primaria dell'entità x viene portata nell'entità y come chiave esterna
+
+	M A N
+		La chiave primaria dell'entità x viene unita alla chiave primaria dell'entità y creando una tabella che ha come chiave l'unione delle due.
+		Se la chiave è troppo lunga o composta da troppi campi allora si crea una nuova chiave autoincrement e si utilizza quella.
+
+	Si definisce grado il numero delle entità che partecipano all'associazione. Si possono avere:
+		associazioni binarie
+			Un rombo (associazione) è collegato a due sole entità o associazioni
+
+		associazioni multiple
+			Un rombo (associazione) è collegato a più di due entità o associazioni
+
+	Se il grado è superiore al secondo si trasforma l'associazione in un'entità, la quale può essere collegata quante volte si vuole senza problemi.
+
+PARTECIPAZIONE
+
+	La partecipazione riguarda il numero minimo di elementi dell'entità y che sono associati a ogni elemento dell'entità x.
+	Il valore minimo assume, solitamente, uno dei due valori (0;1), con:
+		Il valore minimo 0 che indica che la partecipazione è facoltativa
+		Il valore minimo 1 che indica che la partecipazione è obbligatoria
+
+	Quando il legame tra le entità è sempre presente l'associazione è totale
+	Quando il legame tra le entità non è sempre presente l'associazione è parziale
+
+	Docente ---------- dirige __________ Dipartimento
+
+	In questo caso si prende la chiave dell'associazione parziale e la si mette nell'associazione totale
+
+ORGANIZZAZIONE PER GERARCHIE (GERARCHIA IS-A)
+
+	Una gerarchia ha una struttura ad albero composta da entità padre (caratteristiche comuni) e entità figlie (i vari nodi) con particolarità
+	specifiche. Per creare una gerarchia si attua un processo di specializzazione. Quando si hanno delle entità con informazioni in comune, ma non
+	tutte. La generalizzazione prende le informazioni in comune tra le due entità e le porta in una terza entità dalla quale le due precedenti
+	ereditano. Letta dall'alto verso il basso si parla di Specializzazione, mentre letta dal basso verso l'alto si parla di generalizzazione.
+	Viene rappresentata con una linea più spessa rispetto alle altre e con una freccia rivolta verso l'alto.
+
+								PersonaleScuola
+										↑
+								 _______│_______
+								│				│
+							Docente			NonDocente

@@ -1,0 +1,30 @@
+data: 12-02-2019
+path_pdf: Bhojak/_Informatica/Teoria/TeoriaNormalizzazione/
+pdf: Normalizzazione.pdf
+argomento: Normalizzazione
+
+Normalizzazione: dipendenza funzionale transitiva
+	Si dice che un attributo Z dipende transiticamente da un attributo X
+	attraverso un attributo Y se:
+	X determina Y
+	Y determina Z
+	Z non determina Y
+	Y non determina X
+
+	X1, ..., Xn			-->		Y1, ..., Yn			Z
+	chiave candidata	<-/-	non primi			non primo
+
+	--> = dipendenza funzionale piena(quelle non piene si eliminano in
+			seconda forma normale) ovvia.
+
+	<-/- = se avesse una dipendenza funzionale piena ovvia, significherebbe
+			che Y1, ..., Yn sono una chiave candidata, ma a questo punto 
+			perderebbe di senso
+
+	La terza forma normale perciò va a cercare le dipendeze di valori non 
+	primi da altri valori non primi. Quando lo si trova lo si porta fuori
+	insieme al suo determinante, il quale diventa chiave primaria.
+
+	Una relazione è in terza forma normale se è in seconda forma normale e
+	non esistrono dipendenze transitive di attributi non primi da chiavi
+	candidate.

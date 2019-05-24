@@ -1,0 +1,49 @@
+Data: martedi 30 aprile 2019
+Pdf: Trigger.pdf
+Path: Bhojak/_Informatica/Teoria/TeoriaSql/
+Argomento: Trigger
+
+Trigger:
+	E' un sistema che permette, a fronte di un evento sql di scatenare altre istruzioni sql. Un evento
+	sql è in genere una modifica al database. Viene quindi scatenato da un istruzione del DML.
+
+	Paradigma E-C-A
+		Evento:
+			Qualsiasi modifica, o anche un altro trigger, introdotti su una tabella della Base di Dati
+		Condizione:
+			Un predicato booleano espresso mediante sintassi SQL.
+		Azione:
+			Sequenza di primitive SQL generiche, talvolta arricchite da un linguaggio di programmazione
+			specifico nell'ambito di uno specifico DBMS
+
+	Trigger BEFORE & AFTER:
+		Si possono far partire i trigger prima dell'esecuzione dell'istruzione o dopo.
+
+	Trigger INSTEAD OF:
+		Si può utilizzare il trigger INSTEAD OF per sostituire all'istruzione tentata da un utente,
+		un'altra istruzione scelta a priopri. Viene applicato in particolare quando si tenta la
+		modifica attraverso una vista.
+
+	♦Il concetto di vista permette di estendete il concetto degli indici a istruzioni più complesse.
+	 Se ci vuole tanto tempo per eseguire la query, allora si crea una view(vista), di modo che sia
+	 più veloce accedervi. Non si può applicare la insert, la delete, la update su di una vista, poichè
+	 possono solo essere applicate sulla singola tabela.
+
+	Sintassi Trigger Mysql:
+		CREATE
+		[DEFINER = {user|CURRENT_USER}]
+		TRIGGER nome_trigger trigger_time trigger_event
+		ON tabella_target
+		FOR EACH ROW trigger_stmt
+
+		Trigger_time -> Quando il trigger deve essere eseguito: BEFORE o AFTER
+		trigger_event -> Quale evento scatena il trigger: INSERT, UPDATE o DELETE
+		trigger_stmt -> Istruzione sql da eseguire quando viene chiamato il trigger
+
+	Variabili OLD & NEW:
+		OLD.col_name si riferisce al valore della colonna della tabella prima della modifica
+		NEW.col_name si riferisce al valore nuovo(attuale) della tabella
+
+	In un INSERT trigger si può usare solo la variabile NEW
+	In un DELETE trigger si può usare solo la variabile OLD
+	In un BEFORE trigger si può usare la variabile SET NEW.col_name

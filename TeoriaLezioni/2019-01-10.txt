@@ -1,0 +1,31 @@
+'" :
+	Sql interpreta i doppi apici "" come fosse un singolo apice '', poichè i singoli vengono utilizzati per delimitare stringhe e costanti.
+
+STR_REPLACE :
+	La funzione str_replace sostituisce il primo parametro al secondo, all'interno del terzo parametro:
+		$modificato = str_replace("'", "&#39", $nome);
+
+.= :
+	Per concatenare due stringhe si utilizza il .=:
+		$ciao = "ciao";
+		$ciao .= "come va?";
+		echo $ciao 
+		--> ciao come va?
+
+SWITCH :
+	Lo switch ha lo stesso funzionamento del c, con la differenza che può essere anche utilizzato con le stringhe. La sintassi è:
+	switch($nome){
+		case 'ciao':
+			/*fai qualcosa*/
+			break;
+	}
+
+.SERIALIZE() :
+	In html si crea un form, si mettono delle textbox ognuna con il suo nome. Tramite l'utilizzo di serialize() si possono inviare più
+	dati insieme, cosa che senza ajax si sarebbe dovuta fare inviando diversi form, uno per ogni dato da inviare, intasando la rete.
+	var data = $('form').serialize();
+	$.post('url', data);
+
+$. :
+	Serve per identificae un metodo relativo al Jquery all'interno del linguaggio JS. Il . in generale identifica un metodo, è il dollaro
+	ad essere una sostituzione del Jquery.

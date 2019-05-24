@@ -1,0 +1,54 @@
+﻿Now() da la data di sistema
+
+Funzioni di manipolazione delle date:
+	DateDiff() riceve due date e restituisce il numero di giorni che intercorrono tra le due.
+
+	Date_Add() effettua il calcolo di data con scandenza nel futuro. Ricveve la data e il numero di giorni che devono passare per ottenere la nuova data.
+			   Viene utilizzato particolarmente nella contabilità, per sapere se e quali sono le fatture scadute.
+			   
+	Date_Sub() effettua il calcolo di date con scadenza nel passato. Cioè, sottrae alla data il numero di giorni che riceve come parametro
+			   
+Funzioni che permettono di ottenere singoli sottocampi:
+	Day() Preleva il numero del giorno all'interno di una data
+	
+	Months() Preleva il numero del mese all'interno di una data
+	
+	Year() Preleva il numero dell'anno all'interno di una data
+	
+Funzioni di controllo:
+	if() Effettua dei controlli. Riceve tre parametri, controllo, cosa se è vero, cosa se è falso. E' implementata in molti database. Dove non lo è 
+	     viene implementata tramite l' utilizzo di un Case..when..then..else..end. Esiste nella maggior parte dei database professionali.
+
+Normalizzazione:
+----------------
+
+	Dipendenza Funzionale/Dipendenza Funzionale Ovvia:
+		Ad un solo valore di una cosa può corrispondere un solo valore di un'altra cosa
+		Esempio:
+			cogn->nome Falso: Se no per ogni cognome dovrebbe esistere un solo nome, ma non è così
+			classe->indStudio Vero: Per ogni classe(5BINF) corrisponde un solo indirizzo di studio(Informatica)
+			
+		Tutti gli attributi che non fanno parte della chiave primaria, dipendono da quest'ultima(dipendenze funzionali ovvie). A fronte di un valore
+		di una singola chiave corrisponde una solo riga, poichè è chiave primaria. Quindi la chiave primaria determina tutti gli altri attributi.
+		
+	Definizione estesa ad un insieme di attributi:	
+		Si dice che un attributo Y dipende funzionalmente da un insieme di attributi X1, ..., Xn se ad ogni insieme di valori di X1, ..., Xn corrispondea
+		al più un valore di Y:
+			X1, ..., Xn → Y
+			
+	Dipendenza funzionale piena:
+		Si dice che un attributo Y dipende funzionalmente in modo pieno da un insieme di attributi X1, ..., Xn se Y dipende funzionalmente dall'insieme di
+		attributi X1, ..., Xn.
+		
+	Regola da rispettare:
+		Una relazione è in seconda forma normale se è in prima forma notmale ed ogni attributo non primo dipende funzionalmente in modo pieno da
+		ogni chiave candidata
+		
+	Regola di normalizzazione:
+		Si elimina l'attributo non primo che non rispetta la regola dalla relazione originaria e lo si riporta in una nuova relazione insieme al suo determinante.
+		Il determinante è la chiave primaria della nuova relazione. La nuova relazione è in seconda forma normale per costruzione
+		
+	Non ci devono essere sottoinsiemi di chivai candidate che svolgono la stessa funzione.
+	
+	Se la regola da rispettare non è rispettata lo si elimina e lo si porta in un'altra tabella, all'interno del quale viene posto il determinante come chiave
+	primaria. Elimina tutti gli attributi che dipendono parzialmente dalla chiave, non completamente(non in modo pieno).

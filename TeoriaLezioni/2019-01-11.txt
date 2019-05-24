@@ -1,0 +1,64 @@
+BOOTSTRAP
+=========
+
+	navbar-fixed-top/bottom -> Sposta la navbar nella parte superiore o nella parte inferiore della pagina
+	navbar-static-top -> La barra viene messa in cima, ma se si scorre verso il basso scompare
+	pagination-lg/nm/sm -> Determina la dimensione dei bottoni
+	label-default -> Cambia il colore della label per dare una maggior importanza ad una rispetto all'altro. Assomigliano a bottoni, ma non lo sono
+	label-primary -> Cambia il colore della label per dare una maggior importanza ad una rispetto all'altro. Assomigliano a bottoni, ma non lo sono
+	...
+	label-warning -> Cambia il colore della label per dare una maggior importanza ad una rispetto all'altro. Assomigliano a bottoni, ma non lo sono
+	badge pull-right -> Crea la navigazione in orizzontale al posto che in verticale. Inoltre mostra anche le notifiche all'interno del bottone
+
+JUMBOTRON
+=========
+	<div class = "jumbotron">
+		<div class = "container"> ->Crea un container responsive con un titolo che adatta le proprie dimensioni alla pagina. Il container è leggermente più 							piccolo della pagina(meno largo)
+
+	<div class = "container">
+		<div class = "jumbotron"> ->Crea un container responsive con un titolo che adatta le proprie dimensioni alla pagina. Il container è grande quanto la larghezza della pagina
+
+	<div class="page-header"> -> ?
+
+THUMBNAILS
+==========
+	<img alt="generic placeholder thumbnails"> -> Viene cambiata la visualizzazione in base alla larghezza della pagina. Se larga vengono mostrate in 
+												orizzontale, se stretta vengono mostrate in verticale
+ALERTS
+======
+	Servono per comunicare delle cose all'utente. Ne esistono di due tipi, quello removibile e quello non removibile. Si possono anche inserire dei link
+	all'interno per poter reindirizzare ad una spiegazione dell'errore o ad una pagina in caso di successo.
+	Questi non sono removibili:
+	<div class="alert alert-success"> -> Mostra una label che informa sul successo o fallimento di un'azione eseguita dall'utente
+	<div class="alert alert-warning"> -> Mostra una label che informa sul successo o fallimento di un'azione eseguita dall'utente
+	...
+	<div class="alert alert-danger"> -> Mostra una label che informa sul successo o fallimento di un'azione eseguita dall'utente
+
+	Questi sono removibili:
+	<div class="alert alert-success alert-dismissable"> -> Mostra una label che informa sul successo o fallimento di un'azione eseguita dall'utente
+	<div class="alert alert-warning alert-dismissable"> -> Mostra una label che informa sul successo o fallimento di un'azione eseguita dall'utente
+	...
+	<div class="alert alert-danger alert-dismissable"> -> Mostra una label che informa sul successo o fallimento di un'azione eseguita dall'utente
+
+PROGRESS
+========
+	Crea una barra che mostra il progresso di un lavoro. Al di sotto di essa si può anche aggiungere una span che mostra la percentuale del progresso. La
+	progress bar da sola mostra solo l'avanzamento a livello grafico, senza dare un valore. Si può anche cambiare il colore della barra in base alla sua 
+	percentuale di completamento: 20% = rosso, 40% = giallo, ...
+	E' anche possibile mostrare più avanzamenti su di una stessa barra, cambiando semplicemente il colore delle barre rappresentate(una rossa, una blu,..)
+	<div class="progress-bar"> -> Serve per creare una barra di progressione di un determinato lavoro
+	<div class="progress progress-stryped"> -> Crea delle linee all'interno della barra(\\\) che scorrono da destra verso sinistra
+
+MEDIA OBJECT
+===== ======
+
+	<img class="media-object"> ->
+
+LIST GROUP
+==== =====
+
+	<li class="list-group-item active"> -> 
+
+PANEL
+=====
+	Informano l'utente

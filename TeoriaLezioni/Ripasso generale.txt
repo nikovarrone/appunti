@@ -1,0 +1,547 @@
+Modello e-r
+    Il modello e-r offre una rappresentazione grafica semplice indipendente dal DBMS(database management system).
+
+    PRINCIPALI COSTRUTTI:
+        Entità:
+            Classe di oggetti che esiste nella realtà di interesse. E' un rettangolo contenente un nome che
+            serve da identificativo. Un oggetto della classe è detto occorrenza dell'entità.
+
+        Occorrenza dell'entità:
+            Campo facente parte dell'entità.
+
+        Identificatore:
+            Un identificatore composto solo di attributi dell'entità viene detto interno
+
+        Cardinalità:
+            Può essere a uno o a molti.
+            Biunivoca(1 a 1): quando ad una sola istanza di x corrisponde una e una sola istanza di y e viceversa.
+            Semplice(1 a N): quando ad una sola istanza di x possono corrispondere una o più istanze di y, ma ad
+                             una di y ne corrisponde solo una di x.
+            Complessa(M a N): quando ad N istanze di x corrispondo N istanze di y, e viceversa.
+
+        Grado dell'associazione:
+            Si definisce grado il numero delle entità che partecipano all'associazione
+            Associazioni binarie(solo due entità)
+            Associazioni multiple(più di due entità): Ogni associazione multipla può essere trasformata in associazione
+                                                      binaria.
+
+        Partecipazione:
+            La partecipazione riguarda il numero minimo di elementi y che sono associati a ogni elemento
+            dell'entità x.
+            Il valore minimo assume solitamente i valori 0 e 1:
+                0: La partecipazione è facoltativa(associazione parziale)(linea tratteggiata)
+                1: La partecipazione è obbligatoria(associazione totale)(linea continua)
+
+        Gerarchia IS-A:
+            Qundo alcune entità possono avere istanze comuni, o si vuole particolareggiare o generalizzare qualche
+            enitità, si ricorre alla gerarchia. La struttura è quella ad albero, composta da entità padre, quella
+            con le istanze comuni, ed entità figlie (nodi), quelle con particolarità specifiche. Ripercorrendo
+            la gerarchia dall'alto verso il basso si fa una specializzazione, mentre nel caso opposto si fa una
+            generalizzazione.
+
+        Associazione ricorsiva:
+            Un entità è collegata a se stessa.
+
+Sql
+    DDL
+        Data Definition Language -> Creare nel Db
+
+        CREATE
+            Database
+                CREATE DATABASE nome_database
+
+            Table
+                CREATE TABLE nome_tabella(
+                    nome_colonna datatype,
+                    nome_colonna datatype,
+                    nome_colonna datatype,
+                    PRIMARY KEY (nome_colonna, nome_colonna)
+                    FOREIGN KEY (nome_colonna) REFERENCES nome_tabella (nome_colonna)
+                );
+
+                CLAUSOLE OPZIONALI:
+                    NOT NULL
+                    AUTO_INCREMENT
+                    PRIMARY KEY (...)
+                    DEFAULT
+                    UNIQUE
+                    FOREIGN KEY ... REFERENCES ... (...)
+                        Se si referenzia una tabella non ancora creata va in errore
+
+            Domain
+                CREATE DOMAIN nome_dominio
+                AS datatype
+                CHECK(opzioni)
+
+            Index
+                CREATE INDEX nome_index
+                ON nome_tabella(nome_colonna, nome_colonna)
+
+            View
+                CREATE VIEW nome_vista AS
+                SELECT
+
+        DROP
+            DROP DATABASE nome_database;
+
+            DROP TABLE nome_tabella;
+
+            ALTER TABLE nome_tabella
+            DROP INDEX nome_index;
+
+            DROP VIEW view_name
+
+        ALTER
+            ALTER TABLE nome_tabella
+            ADD nome_colonna datatype;
+
+            ALTER TABLE nome_tabella
+            MODIFY COLUMN nome_colonna datatype;
+
+            ALTER TABLE nome_tabella
+            DROP COLUMN nome_colonna;
+    QL
+        Query Language -> estrapolare informazioni
+    DML
+        Data Manipulation Language -> modificare i dati del Db
+
+        INSERT
+        	INSERT INTO nome_tabella
+        	()
+        	VALUES()
+
+        UPDATE
+        	UPDATE nome_tabella
+        	SET()
+        	WHERE
+
+        DELETE
+        	DELETE FROM nome_tabella
+        	WHERE 
+
+    CL
+        Control Language -> gestire controllo accessi
+    SQL
+        Structured Query Language -> interrogazione sulle 4 funzioni (non è case-sensitive)
+
+Manipolazione date e controllo
+    Now() -> Data di sistema
+    DateDiff(data1, data2) -> Differenza tra due date
+    DateAdd(data, intervallo_tempo) -> Somma alla data l'intervallo
+    DateSub(data, intervallo_tempo) -> Sottrae alla data l'intervallo
+    if(condizione, vero, falso) -> normale if
+    Case ... when ... then ... else ... end -> switch case
+
+Transazioni:
+    La transazione è una macro-operazione che racchiude al suo interno una serie
+    di sub-operazioni le quali possono raggiungere il successo o il fallimento
+    solo restando unite.
+
+    ACID:
+        Insieme delle proprietà logiche necessarie per permettere alle transazioni
+        di operare correttamente sui dati.
+
+        Atomicity
+            La transazione è indivisibile nella sua esecuzione, la quale deve essere
+            totale o nulla. Non sono ammesse esecuzioni parziali.
+
+        Consistency
+            Quando il database inizia una transazione si trova in uno stato coerente,
+            e quando la termina deve essere in un altro stato coerente. Significa che
+            non deve violare eventuali stati di integrità, quindi non devono verificarsi
+            contraddizioni tra i dati del db.
+
+        Isolation
+            Ogni transazione deve essere indipendente dalle altre transazioni, il che
+            significa che un eventuale fallimento di una transazione non deve
+            interferire con le altre transazioni in esecuzione.
+
+        Durability
+            Si ottiene garantendo che l'effetto di una transazione eseguita con successo
+            sia mantenuto per sempre, anche in caso di caso di guasti o malfunzionamenti.
+
+    Commit:
+        Durante l'esecuzione di una transazione le modifiche restano "sospese" ed
+        "invisibili" a tutti gli altri utilizzatori del database fino a quando
+        la transazione non vengono confermate mediante l'operazione di commit.
+
+    Rollback:
+        Le modifiche sospese possono essere annullate tramite l'operazione di
+        rollback, la quale riporta il database nello stato subito antecedente
+        all'inizio della transazione.
+
+    Esempio:
+        START TRANSACTION;
+        query1
+        query2
+        COMMIT;
+
+Trigger:
+    Paradigma E-C-A:
+        Evento:
+            Qualsiasi modifica (insert, update, delete) o anche un altro trigger
+            (in questo caso si dice che i trigger sono in cascata) introdotta su
+            una tabella della base di dati.
+        Condizione:
+            Un predicato booleano espresso tramite sintassi sql.
+        Azione:
+            Sequenza di primitive SQL generiche, talvolta arricchite da un
+            linguaggio di programmazione integrato disponibile nell’ambito di
+            uno specifico DBMS.
+
+    Trigger BEFORE-AFTER:
+        Dal momento che vengono innescati da azioni è possibile specificare se
+        si debbano verificare prima o dopo tale evento.
+
+    Trigger INSTEAD OF:
+        E' possibile specificare quale azioni eseguire al posto di quella che
+        ha invocato il trigger.
+
+    Sintassi:
+        CREATE TRIGGER nome_trigger time_trigger event_trigger
+        ON nome_tabella
+        FOR EACH ROW trigger_stmt
+
+        nome_trigger: nome del trigger
+        time_trigger: before o after
+        event_trigger: tipo di primitiva che lo attiva (insert, update, delete)
+        trigger_stmt: primitiva sql da eseguire
+
+        old (old.nome_colonna): valore prima della modifica
+        new (new.nome_colonna): valore dopo la modifca.
+
+Normalizzazione:
+    La normalizzazione è un procedimento volto all'eliminazione delle ridondanze
+    e del conseguente rischio di incoerenza dal database.
+
+    1FN         1FN
+    2FN
+    3FN
+                BC FN
+    4FN
+    5FN
+
+    Prima forma normale:
+        Una relazione è in prima forma normale se ogni attributo che compone
+        il suo schema è atomico.
+
+        Regola:
+            Si divide ogni attributo non atomio in una serie di attributi atomici.
+
+    Chiave candidata:
+        Insieme di attributi in grado di identificare univocamente una tupla.
+
+    Seconda forma normale:
+        Si dice che una relazione è in seconda forma normale se è in prima forma
+        normale, ed ogni attributo non primo dipende funzionalmente in modo pieno
+        da ogni chiave candidata.
+
+        Regola:
+            Si elimina l'attributo che non rispetta la seconda forma normale e lo
+            si porta in una tabella con il suo discriminante. Il discriminante è
+            la chiave primaria della nuova relazione. La nuova relazione è in
+            seconda forma normale per costruzione.
+
+        Attributo primo:
+            Attributo che appartiene ad almeno una chiave candidata.
+
+        Attributo non primo:
+            Attributo che non appartiene a nessuna chiave candidata.
+
+        Dipendenza funzionale:
+            Si dice che un attributo y dipende funzionalmente da un attributo x se
+            ad ogni valore di x esiste al più un valore di y.
+            y dipende funzionalmente da x equivale a dire che x determina y (x -> y)
+
+        Definizione estesa ad un insieme di attributi:
+            Si dice che un attributo y dipende funzionalmente da un insieme di
+            attributi x se per ogni insieme di valori di x esiste al più un valore
+            di y.
+
+        Dipendenza funzionale piena:
+            Si dice che un attributo y dipende funzionalmente in modo pieno da un insieme
+            di attributi x se y dipende funzionalmente dall'insieme di attributi x,
+            e ciò non avviene per alcun sottoinsieme di x.
+
+    Terza forma normale:
+        Una relazione è in terza forma normale se è in seconda forma normale e
+        non esistono dipendeze transitive di attributi non primi da una chiave
+        candidata.
+
+        Regola:
+            Si elimina l'attributo non primo che non rispetta la terza forma normale
+            e lo si porta in un'altra relazione insieme al suo determinante. Il
+            determinante è la chiave primaria della nuova relazione. La nuova
+            relazione è in terza forma normale per costruzione.
+
+        Dipendenza funzionale transitiva:
+            Si dice che un attributo z dipende transitivamente da un attributo x se:
+                x determina y
+                y determina z
+                z non determina y
+                y non determina x
+
+    Boyce-Codd:
+        Una relazione è in forma normale di Boyce-Codd se è in prima forma normale
+        e per ogni dipendenza funzionale rilevabile, il determinante contiene una
+        chiave candidata.
+
+        Regola:
+            Si elimina l'attributo determinato dalla relazione originaria e lo si
+            riporta in una nuova relazione insieme al suo determinante. Il
+            determinante sarà la chiave primaria della nuova relazione.
+
+Quaderno:
+    Database:
+        File sequenziali
+        File non sequenziali
+
+        Il database è una derivazione di un tipo di file, che serve a contenere
+        dei dati memorizzati permanentemente. Fa riferimento al modello r.
+
+        Database relazionale:
+            Viene scritto in SQL e funziona su qualsiasi database relazionale.
+            Non ha controlli e cicli, ma istruzioni mirate a trovare, prelevare,
+            scrivere... sul database. Per 40 anni ha fatto da padrone.
+
+        SQL permette la manipolazione, la creazione e la sicurezza riguardo ai
+        database. E' anche in grado di manipolare i permessi. Esistono diverse
+        categorie di utenti con più o meno permessi. SQL permette solo la
+        manipolazione dei dati del database.
+
+        Programmazione lato server (php):
+            php:
+                Permette di accedere al database tramite una pagina web.
+                sql preleva i dati e php li incastra nell'html.
+
+        L'eccessiva quantità di dati ha portato alla nascita dei Database
+        no sequel (no SQL).
+
+        Access permette di scrivere senza saper SQL. Possiede un interfaccia
+        grafica semplice e intuitiva, senza conoscere alcun linguaggio.
+
+        Mysql: Database relazionale.
+        JQuery: Libreria JS che ne semplifica l'utilizzo.
+        Bootstrap: Libreria che incapsula HTML e CSS.
+
+        Qualsiasi cosa si voglia memorizzare su disco fisso deve essere contenuto
+        all'interno di un file. I più importanti, e i primi, sono i file dati.
+        Un esempio è un tracciato record. La prima cosa da fare è stabilire il
+        tipo di struttura del file. Quando si preleva un dato, si preleva tutto
+        l'array di quel campo, il quale dovrà poi essere diviso. Esistono quindi
+        gli array a lunghezza variabile e quelli a lunghezza fissa.
+
+        Per farlo basta utilizzare un separatore alla fine del nome per avvertire
+        la macchina che il dato è finito. In questo modo non vengono sprecati
+        blank per via della lunghezza fissa.
+
+        I primi file nati sono stati i sequenziali.
+
+        Tipo di file                Modalità di accesso
+        Sequenziale                 sequenziale
+
+        Random                      Sequenziale
+                                    Diretto per numero relativo di record (Modalità equa)
+
+        Indexed                     Sequenziale (ordine fisico)
+                                    Sequenziale (ordine logico)
+                                    Per chiave
+                                    Dinamico
+
+        I file random, per possedere questo tipo, devono avere un tracciato a
+        lunchezza fissa. Per utilizzare il numero relativo di record si fa:
+        (indirizzo - 1)*100, e poi si sposta il puntatore. 100 è la lunghezza
+        fissa presa in esempio.
+
+        Cenni storici:
+            La chiave è un insieme di campi del tracciato record, in grado di
+            identificare univocamente un record. Per creare un file indexed deve, per
+            prima cosa, essere definita la chiave. La IBM introdusse i datavase,
+            ovvero una raccolta di archivi che sono in relazione tra loro. Il primo
+            tipo di datavase nati furono i gerarchici. La seconda generazione assunse
+            il nome di reticolare. La lotta tra le varie compagnie portò alla nascita
+            dei database relazionali. La Oracle nasce come produttore di software per
+            il db2 della IBM. In questo periodo nacque anche il DBase, che non ebbe
+            troppa fortuna per via della pirateria. Era destinato all'utente per la
+            creazione e manipolazione dei file. Vennero anche creati i primi
+            programmi in grado di girare senza DBase, ovvero i .exe. Grazie all'SQL,
+            che fece la fortuna dei database relazionali.
+
+        Linguaggio:
+            Imperativo
+            Dichiarativo (SQL)
+
+        Chiave univoca:
+            Non ci possono essere due record con la stessa chiave.
+            La chiave principale di un file indexed deve essere minimale
+
+        Chiave:
+            Univoca
+            Minimale (Non si inseriscono campi alfanumerici estesi, solo acronimi)
+            Una volta scelta non la si deve cambiare
+            Viene utilizzato un codice (mnemonico)
+
+        Quando viene creato un file indexed, parallelamente viene creata una lista
+        contenente solo la chiave primaria, la quale è costantemente ordinata.
+        Si creano quindi una zona indici ed una zona dati.
+
+        Accesso sequenziale (fisico):
+            Si basa solo sulla zona dati, ignorando la zona indici. Impiega lo
+            stesso tempo di lettura di un file sequenziale.
+
+        Accesso sequenziale (logico):
+            Si basa sulla zona indici, alla quale è collegato un record per
+            ogni vettore.
+
+        Accesso dinamico:
+            E' un misto tra accesso parziale e accesso sequenziale. Ci si
+            posiziona in un dato punto e poi si legge in modo sequenziale.
+
+        E' consigliabile utilizzare un intero come codice piuttosto che un
+        alfanumerico. L'intero deve essere progressivo.
+
+        Chiave primaria:
+            Identifica univocamente un record.
+
+        Chiave secondaria:
+            Non hanno caratteristica di minimalità, solitamente non sono
+            univoche, ammettono informazioni alfanumeriche estese.
+
+        L'utilizzo delle varie zone indice comporta la duplicazione dei vari
+        array. Ogni chiave alternativa offre un ordinamento differente:
+
+        Chiave:
+            Univoca o Duplicata
+            Singola o multipla
+            Primaria o secondaria
+
+            E' anche importante mettere i campi nell'ordine giusto.
+
+            Univoca:
+                Identifica un singolo record
+            Duplicata:
+                Identifica più record
+            Singola:
+                E' composta da un solo campo
+            Multipla:
+                E' composta da più campi
+            Primaria:
+                E' necessaria per l'esistenza del file indexed
+            Secondaria:
+                Offre un ordinamento differente
+
+        Difetti file indexed:
+            La definizione del tracciato record avveniva all'interno del
+            programma (in ogni programma bisognava ridefinire la struttura).
+            Primo principio che ha fatto nascere i database.
+
+        [Qualcosa da ricopiare]
+
+
+        Un database è composto da 3 livelli:
+            Livello esterno -> viste, ciò che l'utente finale vede
+            Livello logico -> DBMS, il cuscinetto tra i due strati
+            Livello fisico -> HD (File), la scrittura su disco
+
+        File:
+            sequenziali
+            Random
+            Indexed
+
+        Database:
+            gerarchico -> schema ad albero con collegamenti fisici
+            reticolare -> schema ad albero con duplicazione
+            relazionale -> schema a grafo con collegamenti logici (snello e veloce)
+
+        Modello e-r:
+            Serve a rappresentare quali sono le entità e le loro relazioni.
+
+        Dominio di una relazione:
+            Tutte le tuple che possono essere inserite diverse una dall'altra.
+
+        Dominio attivo:
+            Insieme di tutte le tuple attualmente presenti.
+
+        Chiave esterna:
+            Chiave primaria di un entità inserita in una seconda entità per
+            creare un collegamento logico.
+
+        Operatori:
+            utilizzano come operandi delle relazioni di base e producono come
+            risultato delle relazioni (virtuali, non vengono memorizzate).
+
+        Schema di una relazione:
+            Insieme degli attributi.
+
+        Operatori:
+            Relazionali:
+                Selezione
+                    Opera su una relazione di base e produce una relazione virtuale
+                    che ha come schema lo stesso schema della relazione di base e
+                    come dominio attivo un sottoinsieme del dominio attivo della
+                    relazione di base.
+                Proiezione
+                    Opera su una relazione di base e produce una relazione virtuale
+                    che ha come schema un sottoschema della relazione di base.
+                Congiunzione
+                    Opera su due relazioni di base e produce una relazione virtuale
+                    che ha come schema l'unione degli schemi delle relazioni di base
+                    e come dominio attivo il prodotto cartesiano dei domini attivi
+                    secondo criteri di congiunzione.
+
+            Booleani:
+                Unione
+                    Opera su due relazioni di base che insistono sullo stesso schema
+                    e produce una relazione virtuale che ha per schema lo stesso
+                    schema delle relazioni di base e come dominio attivo l'unione
+                    dei domini attivi delle relazioni di base.
+                Differenza
+                    Opera su due relazioni di base che insistono sullo stesso schema
+                    e produce una relazione virtuale che ha per schema lo stesso
+                    schema delle relazioni di base e come dominio attivo la differenza
+                    dei domini attivi delle relazioni di base.
+                Intersezione
+                    Opera su due relazioni di base che insistono sullo stesso schema
+                    e produce una relazione virtuale che ha per schema lo stesso
+                    schema delle relazioni di base e come dominio attivo l'intersezione
+                    dei domini attivi delle relazioni di base.
+
+        Formule di aggregazione:
+            MIN
+            MAX
+            SUM
+            AVG
+            COUNT
+
+        DML:
+            Permette di manipolare i dati nel db
+
+            INSERT
+                INSERT INTO nome_tabella
+                ()
+                VALUES()
+
+            UPDATE
+                UPDATE nome_tabella
+                SET ()
+                WHERE
+
+            DELETE
+                DELETE FROM nome_tabella
+                WHERE
+
+        2 TECNICHE:
+            con dizionario:
+            senza dizionario:
+
+        Regole di derivazione:
+
+        	1 A 1
+        		La chiave primaria dell'entità x è la medesima chiave primaria dell'entità y
+
+        	1 A N
+        		La chiave primaria dell'entità x viene portata nell'entità y come chiave esterna
+
+        	M A N
+        		La chiave primaria dell'entità x viene unita alla chiave primaria dell'entità y creando una tabella che ha come chiave l'unione delle due.
+        		Se la chiave è troppo lunga o composta da troppi campi allora si crea una nuova chiave autoincrement e si utilizza quella.

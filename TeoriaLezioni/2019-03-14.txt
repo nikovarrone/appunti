@@ -1,0 +1,101 @@
+Data: 14 marzo 2019
+Pdf: modelloER.pdf
+Path: Bhojak/_Informatica/Teoria/TeoriaNormalizzazione/
+Argomento: Gerarchia ISA
+
+Il modo classico per realizzare una gerarchia di questo tipo nel modello logico è quella di mettere tre entità,
+collegate tra loro tramite chiavi.
+In genere la realizzazione pratica di un ISA è la realizzazione di un'unica tabella con tutte le proprietà. Qusto
+significa che ci saranno campi NULL o che varranno 0, tuttavia, nonostante a livello teorico sia una schifezza
+a livello pratico viene molto utilizzato.
+
+Associazione ricorsiva:
+	Un'istanza di una sola entità può avere uno o più collegamenti con una o più istanze della stessa entità.
+
+		______________
+	n /|\			  |
+	docente			tutor
+	1  |______________|
+
+	In questo caso un docente tutor può essere tutor di n studenti. L'associazione non è necessaria, ovvero è
+	facoltativa, poichè un docente potrebbe non essere tutor, e un docente potrebbe non avere un tutor.
+
+	Una relazione ricorsiva si risolve mettendo un ulteriore codice, che sarà un codice della tabella stessa per
+	quelli che hanno un tutor, mentre sarà nullo per coloro che non ce l'hanno
+
+LE TRANSAZIONI
+
+	Una transazione è una macro istruzione che include al suo interno una serie di istruzioni elementari, 
+	racchiuse in una transazione perchè devono essere svolte tutte o nessuna, non se ne può svolgere solo una 
+	parte, se no rimarrebbe un database incongruente. 
+	Un esempio lo si ha quando un utente vuole ottenere il saldo del proprio conto. La soluzione migliore è
+	quella di effettuare una sum(). In caso non lo si volesse fare si potrebbe inserire all'interno dello schema
+	un campo somma, il quale tutavia deve essere costantemente aggiornato in ogni sua tupla, altrimenti io
+	verso tot soldi, ma il mio conto non viene aggiornato(incongruenza).
+
+	Per farlo si fa:
+
+		UPDATE CC
+		SET Saldo = Saldo - 50
+		WHERE Conto = 123
+
+		UPDATE CC
+		SET Saldo = Saldo + 50
+		WHERE Conto = 235
+
+	Queste due operazioni ad esempio devono essere svolte insieme, come se fossero un unica operazione, poichè
+	altrimenti uno dei due potrebbe trovarsi con 50 euro in meno poichè la prima operazione è stata eseguita.
+	Il secondo si ritroverebbe con gli stessi soldi poichè la seconda operazione non è stata effettuata.
+
+ACID (Atomicity, Coerency, Isolation, Durability)
+	
+	ATOMITICITA':
+		La transazione è indivisibile nella sua esecuzione e la sua esecuzione deve essere o totale o nulla,
+		non sono ammesse esecuzioni parziali. In caso non riuscisse ad eseguirle il database torna allo stato
+		salvato prima dello svolgimento delle operazioni, annullando quelle già effettuate.
+
+	COERENZA:
+		Quando inizia la transazione, il database deve essere in uno stato coerente. Quando la transazione
+		termina il database si deve trovare ancora in uno stato coerente, sia che la transazione sia stata
+		eseguita, sia che sia stata abortita.
+
+	ISOLAMENTO:
+		Ogni transazione deve essere eseguita in modo isolato e indipendente dalle altre transazioni.
+		L'eventuale fallimento di una transazione non deve interferire con il risultato di altre transazioni
+		in esecuzione.
+
+	DURABILITA' (PERSISTENZA):
+		L'effetto delle transazioni eseguite con successo deve essere mantenuto per sempre nel database anche
+		in caso di guasti e malfunzionamenti. Il risultato della transazione può essere anche salvato in modo
+		temporaneo. Una delle tecniche più diffuse è quella del journaling, ovvero si può mettere la tabella
+		sotto giornale: ogni modifica che viene effettuata viene registrata. Quando viene effettuata una
+		operazione il valore non viene aggiornato o sostituito. Viene creato un nuovo record, al quale viene
+		settato il flag attivo, mentre agli altri viene settato il flag inattivo e gli viene messa la data
+		di quando il flag è stato modificato. Volendo si possono siglare tutti i record delle modifche effettuate
+		come record temporanei. Se la transazione non va a buon fine i record temporanei vengono cancellati e
+		si mantengono i vecchi.
+
+	COMMIT:
+		Fino a che non è stata effettuata tutta la transazione le modifche non si vedono. Questo significa che se
+		si accede al database a cavallo tra la prima e la seconda operazione della transazione, quest'utlima non
+		si vede (rimane sospesa, invisibile). Questa situazione si verifica fino a che non viene effettuata 
+		l'operazione di commit.
+
+	ROLLBACK:
+		Le modifiche sospese possono essere annullate del tutto mediante un'operazione di rollback, la quale
+		riprsitna la situazione immediatamente antecedente all'inizio della transazione.
+
+	esempio:
+		START TRANSACTION;
+			SELECT @totSal := SUM(salary)
+			FROM table1
+			WHERE type=1;
+
+			UPDATE table2
+			SET summary = @totSal
+			WHERE type=1;
+
+		COMMIT;
+
+		Le variabili con la chiocciola sono le variabili globali della transazione. Sono le variabili che vengono
+		utilizzate in entrambe le query, e che perciò sono condivise

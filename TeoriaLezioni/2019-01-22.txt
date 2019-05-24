@@ -1,0 +1,134 @@
+DDL -> DATA DEFINITION LANGUAGE:
+
+♦ CREATE -> Crea
+	Database (Database)
+	Table (Tabella)
+	Domain (Dominio)
+	Index (Indice)
+	View (Vista)
+
+♦ DROP -> Cancella
+	Database (Database)
+	Table (Tabella)
+	Domain (Dominio)
+	Index (Indice)
+	View (Vista)
+
+♦ ALTER -> Modifica
+	Table (Tabella)
+	Index (Indice)
+	View (Vista)
+
+Parte Significativa:
+Due tabelle collegate tra loro secondo uno schema 1 a N.
+
+Su tutti i database server si può agire da riga di comando. Tramite cmd si
+accede alla cartella xampp e si lancia il batch di mysql, il quale modifica
+l'interfaccia del prompt permettendo la modifica dei database.
+
+Varchar: la dimensione che inserisco è la dimensione massima, il che significa
+		 che se il nome è più piccolo di 30, occuperà meno spazio
+Char: occupa tutto lo spazio che gli viene dato, magari sprecando anche byte
+
+
+Sintassi:
+---------
+
+	CREATE TABLE table_name(
+		column1 datatype,
+		column2 datatype,
+		column3 datatype,
+		...
+	);
+
+	CREATE TABLE alunni(
+		codS int,
+		cognome varchar(30),
+		nome varchar(30),
+		classe char(5)
+	);
+
+
+Clausole Opzionali:
+-------------------
+	Le clausole non sono case sensitive, come anche il linguaggio DDL
+
+	NOT NULL		-> Il campo dovrà sempre essere valorizzato
+	AUTO_INCREMENT	-> Il campo si autoincrementa da solo
+	PRIMARY KEY		-> Meglio non metterla a livello di singolo campo
+	DEFAULT			-> Valore di default che la variabile assume se non modificata. "ciao", 3
+	UNIQUE			-> Il valore non può essere ripetuto. Chiave candidata non primaria(legante)
+
+	CREATE TABLE voti(
+		codStu int,
+		codMat char(3),
+		voto smallint,
+		PRIMARY KEY(codStu, codMat) -> Essendoci più campi si deve scrivere in questo modo
+	);
+
+		CREATE TABLE alunni(
+		codS int primary key,	-> Funziona se utilizzato su un solo campo
+		cognome varchar(30),
+		nome varchar(30),
+		classe char(5)
+	);
+
+	Non si può scrivere unique e primary key sullo stesso campo
+
+Chiave straniera:
+-----------------
+
+	CREATE TABLE voti(
+		codStu int,
+		codMat char(3),
+		voto smallint,
+		PRIMARY KEY (codStu, codMat),
+		FOREIGN KEY (codStu) REFERENCES studenti(cods),
+		FOREIGN KEY (codMat) REFERENCES materie(codm)
+	);
+
+	! ATTENZIONE !
+	La seconda foreign key darebbe un errore, poichè non è mai stata creata una tabella
+	"materie", quindi non può essere referenziata. Se si ha un collegamento 1 a N il
+	collegamento va fatto nella tabella a N. La tabella che si sta referenziando va creata
+	prima della referenziazione
+
+
+Integrità referenziale:
+-----------------------
+
+	Definizione Integrità referenziale: GOOGLE
+	restrict | cascade | set null | no action | set default
+
+	Scrivere restrict, no action o omettere la clausola ON UPDATE/ON DELETE è la stessa cosa
+	Cascade è molto pericolosa come cosa. Elimina tutto ciò a cui è collegato quel record. Se
+	utilizzata con l'update è meno pericolosa e molto più comoda. Utilizzata quando si modifica la
+	chiave primaria.
+
+	CREATE TABLE voti(
+		codStu int,
+		codMat char(3),
+		voto smallint,
+		PRIMARY KEY(codStu, codMat),
+		FOREIGN KEY (codStu) REFERENCES studenti(cods),
+		ON UPDATE
+		ON DELETE
+	);
+
+Create domain:
+--------------
+
+	NON E' IMPLEMENTATO SU MYSQL
+	Un dominio può essere definito come la creazione di un nuovo tipo di dato. Se viene inserito un valore
+	fuori dal range viene dato un errore.
+
+	CREATE DOMAIN tipoVoto
+		AS SMALLINT
+		CHECK (value >=2 AND value <= 10)
+
+	CREATE TABLE voti(
+		codStu int,
+		codMat char(3),
+		voto tipoVoto,
+		PRIMARY KEY (codStu, codMat)
+	);

@@ -1,0 +1,23 @@
+data: 14/02/2019
+path: Bhojak/_Informatica/TeoriaNormalizzazione/
+pdf: normalizzazione.pdf
+argomento: Normalizzazione BCNF (Boyce-Codd)
+
+Forma Boyce-Codd:
+	Una relazione è in forma normale di Boyce-Codd se è in prima forma normale e, per ogni
+	dipendenza funzionale rilevabile, il determinante contiene una chiave candidata.
+
+Regola:
+	Si elimina l'attributo determinato dalla relazione orifinaria e lo si riporta in una
+	nuova relazione insieme al suo determinante. Il determinante è la chiave primaria della
+	nuova relazione.
+
+Boyce-Codd non parla di attributi NON primi, di conseguenza può essere applicato con qualsiasi
+attributo.
+Si controlla se ogni tabella è in forma normale di Boyce-Codd. Il controllo viene effettuato
+per controllare le dipendenze funzionali tra attributi primi.
+La forma Boyce-Codd va applicata in seguito all'applicazione della terza forma normale, questo
+significa che le dipendenze funzionali tra attributi primi e non primi dovrebbero essere
+assenti (2 F.N.) e che le dipendenze tra attributi non primi dovrebbero anche essere scomparse
+grazie alla 3 F.N. In linea puramente teorica dovrebbero essere rimaste solo quelle tra
+attributi primi, se no ci sono stati errori nell'applicazione delle altre due forme normali.

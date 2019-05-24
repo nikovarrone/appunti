@@ -1,0 +1,34 @@
+Data: 19 marzo 2019
+Pdf: Transazioni.pdf
+Path: Bhojak/_Informatica/Teoria/TeoriaPdf/
+Argomento: Transazioni
+
+	Esempio transazioni mysql
+
+		START TRANSACTION;
+
+		SELECT @totSal := SUM(salary)
+		FROM salary
+		WHERE type = 1;
+
+		UPDATE emplyee
+		SET summary = @totSal
+		WHERE type = 1;
+
+		COMMIT;
+
+	Il puneo e virgola è necessario quando si vogliono scrive query multiple, se se ne vuole scrivere una singola non è
+	necessario. La chiocciola serve invece per dichiarare una variabile globale(di transazione) e non come campo di una
+	singola tabella.
+
+	Utilizzando le transazioni si evita il rischio di avere incongruenza. In questo caso tuttavia è inutile eseguire una
+	transazione, poichè non si stanno effettuando due modifiche al database, ma una modifica ed un update. Sono state inserite
+	in una transazione per poter utilizzare una variabile globale per poter eseguire l'update. Se si vuole effettuare la
+	select sulla variabile globale è comunque necessario utilizzare una tabella nella from, indipendentemente da quale,
+	nonostante da quest'ultima non verrà prelevato alcun campo.
+
+	Il rollback è l'operazione opposta al commit. O si effettua la commit, che porta tutto in definitivo, o in alternativa
+	si effettua il rollback, che riporta tutto allo stato di partenza. La necessità di avere delle transazioni non è così
+	frequente, e deriva da grosse moli di dati. Viene spesso utilizzata qundo la complessità di calcolo è troppo elevata, e
+	di conseguenza si crea un campo per aiutare il calcolo. A questo punto è necessario tenere la coerenza del database, e 
+	quindi si utilizzano le transazioni. 

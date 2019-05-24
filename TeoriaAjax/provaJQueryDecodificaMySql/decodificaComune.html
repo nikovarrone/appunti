@@ -1,0 +1,62 @@
+<html>
+	<head>
+		<script type="text/javascript" src="jquery.min.js"></script>
+		<script>
+		$(document).ready(function(){
+			/*Tutto il codice messo tra graffe viene eseguito dopo la creazione completa della pagina. E' consigliato in particolare quando si devono eseguire delle query
+			  e quindi si deve essere sicuri che la tabella/database sia già stato creato e caricato*/
+			$("#idImgAvanti").click(function(){
+				// esempio con $.get
+				// $.get("decodificaComune.php?codComune="+document.getElementById("codComune").value,function(data,status){
+				//	document.getElementById("descComune").value=data;
+				// });
+				// esempio con $.ajax
+				$.ajax({
+					  url:"decodificaComune.php",
+					  type: "GET",
+					  data: { codComune: $("#codComune").val()},
+					  success:function(result){
+					  	/*funzione che viene eseguita quando la chiamata ajax ha avuto successo*/
+						$("#descComune").val(result);
+						//document.getElementById("descComune").value=result; // è l'equivalente javascript della riga precedente jQuery
+					  },
+					  error: function(richiesta,stato,errori){
+						$("#descComune").val("<strong>Chiamata fallita:</strong>"+stato+" "+errori);
+						//document.getElementById("descComune").value="<strong>Chiamata fallita:</strong>"+stato+" "+errori;
+					  }
+				});		  
+			});
+		});
+
+		</script>	
+</head>
+	<body>
+	  <table border="0" width="760" cellspacing="0" cellpadding="0">
+		<tr>
+			<td colspan="2">
+				<p>
+					Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum.
+				</p>
+			</td>
+		</tr>
+		<tr height="30px"><td colspan="2"></td></tr>
+		<tr>
+		  <td >
+			  <input type="text" name="codComune" id="codComune" size="4">
+			  <img id="idImgAvanti" src="avanti.gif" title="decodifica">
+		  </td>
+		  <td>
+			   <input type="text" name="descComune" id="descComune" size="35" readonly >
+		  </td>
+		</tr>
+		<tr height="30px"><td colspan="2"></td></tr>
+		<tr>
+			<td colspan="2">
+				<p>
+					Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum.
+				</p>
+			</td>
+		</tr>
+	  </table>
+	</body>
+</html>

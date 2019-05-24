@@ -1,0 +1,56 @@
+Data: 28 marzo 2019
+Pdf: 
+Path: Bhojak/_Informatica/_Teoria/_TeoriaLezioni/
+Argomento: Lock e unlock
+
+Un database può essere utilizzato da più di un utente, anche contemporaneamente, perciò bisogna fare in modo che si mantenga
+comunque la coerenza di quest'ultimo. Quindi vengono concessi i permessi di scrittura solamente al primo utente, mentre gli
+altri vi potranno accedere in sola lettura, non vedendo le modifiche effettuate da chi lo ha aperto per primo. 
+
+Esempio:
+	Due persone vogliono inserire una fattura. Al momento ce ne sono 25. I due utenti devono salvare la fattura, premono
+	il tasto contemporaneamente, quindi viene effettuato il salvataggio in contemporanea, quindi prendono il valore 25,
+	lo aggiornano a 26 e ci si ritrova con due fatture numerate con 26.
+
+Fondamentalmente si implementa la mutua esclusione.
+I LOCK
+
+	Attraverso un lock è possibile vincolare l'utilizzo di un'intera tabella o di una singola riga ad uno specifico
+	utente, per il tempo necessario a completare l'operazione che potrebbe creare problemi
+
+	Table lock se riguarda l'intera tabella
+	Row lock se riguarda la singola riga
+
+	MyISAM offre la possibilità di fare la lock solamente sulla tabella o su di un gruppo di righe, per questo si preferisce
+	InnoDB, poichè quest'ultimo offre la possibilità di farlo anche solo sulla singola riga.
+
+	Si può anche impostare il lock in MySQL.
+	Per bloccarla si utilizza LOCK TABLES tbl READ
+	Per bloccare più tabelle si devono scrivere tutte di seguito nella stessa istruzione, poichè ad ogni LOCK, le 
+	precedenti LOCK vengono rimosse:
+		v 	LOCK TABLES tbl, tbl2, tbl3 READ
+
+		x	LOCK TABLES tbl READ
+			LOCK TABLES tbl2 READ
+			/*tbl non è più lockata, poichè è stata effettuata un'altra lock*/
+
+	Bloccare tutte le modifiche su di un'intera tabella è bloccante, problematico, perciò dove è possibile si utilizzano lock
+	in scrittura sulla singola riga.
+
+	Per lockare le singole righe in MySQL:
+	Si effettua la SELECT delle righe che si vogliono lockare
+	in seguito si applica la clausola FOR UPDATE, o in alternativa LOCK IN SHARE MODE (Meno esclusivo)
+
+	Esempio:
+		SELECT * 
+		FROM tbl 
+		WHERE id= 123
+		LOCK IN SHARE MODE -> Permette la lettura, ma non la modifica (Meno esclusivo)
+
+		SELECT * 
+		FROM tbl 
+		WHERE id= 123
+		FOR UPDATE		   -> Non permete la select sulle righe selezionate, impedendo quindi sia lettura che scrittura
+
+	Queste istruzioni (quelle che lockano uno o più record) andrebbero inserite all'interno di una transazione, per far si che
+	nessuno possa intromettersi. Il commit ed il rollback rilasciano la lock.
